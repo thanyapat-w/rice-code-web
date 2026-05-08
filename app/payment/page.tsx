@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabaseClient } from "@/lib/supabase-client";
+import toast from "react-hot-toast";
 
 type OrderInfo = {
   orderId: string;
@@ -51,7 +52,7 @@ export default function PaymentPage() {
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      alert("กรุณาเลือกไฟล์รูปภาพเท่านั้น");
+      toast("กรุณาเลือกไฟล์รูปภาพเท่านั้น");
       return;
     }
 
@@ -65,12 +66,12 @@ export default function PaymentPage() {
 
   const handleConfirmSlip = async () => {
     if (!selectedFile) {
-      alert("กรุณาเลือกไฟล์สลิป");
+      toast("กรุณาเลือกไฟล์สลิป");
       return;
     }
 
     if (!orderInfo?.orderId) {
-      alert("ไม่พบข้อมูลคำสั่งซื้อ");
+      toast("ไม่พบข้อมูลคำสั่งซื้อ");
       return;
     }
 
@@ -89,7 +90,7 @@ export default function PaymentPage() {
 
       if (uploadError) {
         console.error("uploadError", uploadError);
-        alert(uploadError.message || "อัปโหลดสลิปไม่สำเร็จ");
+        toast.error(uploadError.message || "อัปโหลดสลิปไม่สำเร็จ");
         return;
       }
 
@@ -111,14 +112,14 @@ export default function PaymentPage() {
 
       if (updateError) {
         console.error("updateError", updateError);
-        alert(updateError.message || "อัปเดตคำสั่งซื้อไม่สำเร็จ");
+        toast.error(updateError.message || "อัปเดตคำสั่งซื้อไม่สำเร็จ");
         return;
       }
 
       router.push("/success");
     } catch (error) {
       console.error(error);
-      alert("เกิดข้อผิดพลาด");
+      toast.error("เกิดข้อผิดพลาด");
     } finally {
       setLoading(false);
     }

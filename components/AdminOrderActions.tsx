@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabaseClient } from "@/lib/supabase-client";
+import toast from "react-hot-toast";
 
 type Props = {
   orderId: string;
@@ -31,7 +32,7 @@ export default function AdminOrderActions({
         .eq("id", orderId);
 
       if (error) {
-        alert(error.message || "อัปเดตสถานะไม่สำเร็จ");
+        toast.error(error.message || "อัปเดตสถานะไม่สำเร็จ");
         return;
       }
 

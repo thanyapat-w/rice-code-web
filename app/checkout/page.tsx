@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabaseClient } from "@/lib/supabase-client";
+import toast from "react-hot-toast";
 
 type CartItem = {
   id: string;
@@ -60,12 +61,12 @@ export default function CheckoutPage() {
 
   const handleContinue = async () => {
     if (!customerName || !customerPhone || !roomNo || !deliveryTime) {
-      alert("กรุณากรอกข้อมูลลูกค้าให้ครบ");
+      toast.error("กรุณากรอกข้อมูลลูกค้าให้ครบ");
       return;
     }
 
     if (cart.length === 0) {
-      alert("ไม่มีสินค้าในตะกร้า");
+      toast.error("ไม่มีสินค้าในตะกร้า");
       return;
     }
 
@@ -94,7 +95,7 @@ export default function CheckoutPage() {
 
       if (orderError || !createdOrder) {
         console.error("orderError", orderError);
-        alert(orderError?.message || "บันทึกคำสั่งซื้อไม่สำเร็จ (orders)");
+        toast.error(orderError?.message || "บันทึกคำสั่งซื้อไม่สำเร็จ (orders)");
         return;
       }
 
@@ -116,7 +117,7 @@ export default function CheckoutPage() {
 
         if (itemError || !createdItem) {
           console.error("itemError", itemError);
-          alert(itemError?.message || "บันทึกรายการสินค้าไม่สำเร็จ (order_items)");
+          toast.error(itemError?.message || "บันทึกรายการสินค้าไม่สำเร็จ (order_items)");
           return;
         }
 
@@ -156,7 +157,7 @@ export default function CheckoutPage() {
 
           if (optionError) {
             console.error("optionError", optionError);
-            alert(
+            toast.error(
               optionError?.message ||
                 "บันทึกตัวเลือกสินค้าไม่สำเร็จ (order_item_options)"
             );
@@ -180,10 +181,11 @@ export default function CheckoutPage() {
       localStorage.setItem("orderInfo", JSON.stringify(orderInfo));
 
       // ยังไม่ล้าง cart ตอนนี้ รอให้จบ flow ก่อน
+      toast.success("บันทึกคำสั่งซื้อแล้ว");
       router.push("/payment");
     } catch (error) {
       console.error(error);
-      alert("เกิดข้อผิดพลาด");
+      toast.error("เกิดข้อผิดพลาด");
     } finally {
       setLoading(false);
     }

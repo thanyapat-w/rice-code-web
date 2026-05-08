@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import toast from "react-hot-toast";
 
 type MenuOption = {
   id: string;
@@ -199,7 +200,11 @@ export default function MenuOptionsForm({
 
     localStorage.setItem("cart", JSON.stringify(cart));
 
-    alert(editItemId ? "แก้ไขรายการแล้ว" : "เพิ่มรายการลงในตะกร้าแล้ว");
+    toast.success(
+      editItemId
+      ? "แก้ไขรายการแล้ว"
+      : "เพิ่มรายการลงในตะกร้าแล้ว"
+    );
     window.location.href = "/cart";
   };
 

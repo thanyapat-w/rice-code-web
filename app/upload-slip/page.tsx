@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { supabaseClient } from "@/lib/supabase-client";
+import toast from "react-hot-toast";
 
 type OrderInfo = {
   orderId: string;
@@ -24,13 +25,13 @@ export default function UploadSlipPage() {
 
   const handleSubmit = async () => {
     if (!file) {
-      alert("กรุณาเลือกไฟล์สลิป");
+      toast("กรุณาเลือกไฟล์สลิป");
       return;
     }
 
     const storedOrderInfo = localStorage.getItem("orderInfo");
     if (!storedOrderInfo) {
-      alert("ไม่พบข้อมูลคำสั่งซื้อ");
+      toast.error("ไม่พบข้อมูลคำสั่งซื้อ");
       return;
     }
 
@@ -51,7 +52,7 @@ export default function UploadSlipPage() {
 
       if (uploadError) {
         console.error("uploadError", uploadError);
-        alert(uploadError.message || "อัปโหลดสลิปไม่สำเร็จ");
+        toast.error(uploadError.message || "อัปโหลดสลิปไม่สำเร็จ");
         return;
       }
 
@@ -73,14 +74,15 @@ export default function UploadSlipPage() {
 
       if (updateError) {
         console.error("updateError", updateError);
-        alert(updateError.message || "อัปเดตคำสั่งซื้อไม่สำเร็จ");
+        toast.error(updateError.message || "อัปเดตคำสั่งซื้อไม่สำเร็จ");
         return;
       }
 
+      toast.success("ส่งสลิปเรียบร้อยแล้ว");
       router.push("/success");
     } catch (error) {
       console.error(error);
-      alert("เกิดข้อผิดพลาด");
+      toast.error("เกิดข้อผิดพลาด");
     } finally {
       setLoading(false);
     }
